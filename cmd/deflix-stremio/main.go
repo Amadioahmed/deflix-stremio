@@ -134,7 +134,7 @@ var (
 
 // Clients
 var (
-	metaFetcher  stremio.MetaFetcher
+	metaFetcher  *metafetcher.Client
 	searchClient *imdb2torrent.Client
 	rdClient     *realdebrid.Client
 	adClient     *alldebrid.Client
@@ -568,8 +568,7 @@ func initClients(config config, logger *zap.Logger) {
 	cinemetaClient := cinemeta.NewClient(cinemeta.DefaultClientOpts, cinemetaCache, logger)
 	metaFetcher, err = metafetcher.NewClient(config.IMDB2metaAddr, cinemetaClient, logger)
 	if err != nil {
-		logger.Error("Couldn't create metafetcher client, continuing with regular cinemetaClient", zap.Error(err))
-		metaFetcher = cinemetaClient
+		logger.Fatal("Couldn't create metafetcher client", zap.Error(err))
 	}
 
 	ytsClientOpts := imdb2torrent.NewYTSclientOpts(config.BaseURLyts, timeout, config.MaxAgeTorrents)
