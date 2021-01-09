@@ -163,7 +163,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 
 	// Create an "info" logger at first, replace later in case the logging level is configured to be something else
-	logger, err := stremio.NewLogger("info")
+	logger, err := stremio.NewLogger("info", stremio.DefaultOptions.LogEncoding)
 	if err != nil {
 		panic(err)
 	}
@@ -176,9 +176,9 @@ func main() {
 	if err != nil {
 		logger.Fatal("Couldn't marshal config to JSON", zap.Error(err))
 	}
-	if config.LogLevel != "info" {
+	if config.LogLevel != "info" || config.LogEncoding != stremio.DefaultOptions.LogEncoding {
 		// Replace previously created logger
-		if logger, err = stremio.NewLogger(config.LogLevel); err != nil {
+		if logger, err = stremio.NewLogger(config.LogLevel, config.LogEncoding); err != nil {
 			logger.Fatal("Couldn't create new logger", zap.Error(err))
 		}
 	}
